@@ -1,4 +1,4 @@
-# pT-PreSearch.v1.0 by Petabyte
+# pT-PreBot v1.0 by Petabyte
 
 **Description:**  
 pT-PreSearch is a tool designed for searching pre releases fetched from your MySQL database. 
