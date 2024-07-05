@@ -25,8 +25,11 @@ It includes MySQL database connectivity and IRC/TCL integration for real-time in
 Remember to rehash the bot after making changes.
 
 **Install:**  
-*sudo apt-get install jq
-*sudo apt-get install bc
+Install packages
+
+sudo apt-get install jq
+
+sudo apt-get install bc
 
 1. Place all files into your eggdrop scripts folder.  
 2. Load .tcl scripts in your eggdrop configuration.
