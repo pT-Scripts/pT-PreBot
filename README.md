@@ -2,7 +2,7 @@
 
 **Description:**  
 pT-PreBot is a tool designed for searching pre releases fetched from your MySQL database. 
-It includes MySQL database connectivity and IRC integration for real-time interaction.
+It includes MySQL database connectivity and IRC/TCL integration for real-time interaction for your eggdrop.
 + PreDB.net API Search
 
 **Commands:**  
