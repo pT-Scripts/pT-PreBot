@@ -1,4 +1,4 @@
-# db.tcl
+# pT-predb.tcl
 
 # Command handler for !db
 bind pub - !db dbStats
