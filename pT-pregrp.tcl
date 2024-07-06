@@ -1,4 +1,4 @@
-# groupstats.tcl
+# pT-pregrp.tcl
 
 # Command handler for !group
 bind pub - !group groupSearch
