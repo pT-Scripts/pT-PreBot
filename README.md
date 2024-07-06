@@ -7,6 +7,7 @@ pT-PreBot is an IRC bot designed for managing pre-release data and integrating w
 
 ## Features:
 - **Fast Addpre System for Insert to database, that Supports:** !addpre !info !genre !addurl !nuke !unnuke (in development: !addscr !addnfo !addsfv !addm3u)
+- **IRC announce for PRE / INFO / URL**
 - **Extended Search System that Supports:** !pre !dupe !group !db
 - **Full Database stats using !db showing:**
   Total releases
@@ -62,6 +63,13 @@ NOTE: If you are using dbschema.sql then dont edit tables, if you running own da
 - If you want to disable this module , comment in pT-pre.tcl
    
 #set script_path2 "/eggdrop/scripts/sh/pT-preapi.sh"
+
+## **Announce Settings**
+
+If you dont want announce of PRE INFO URL
+comment like this in pT-addpre.tcl - pT-addinfo.tcl - pTaddurl.tcl
+
+#putserv "PRIVMSG #somechan :$line"
 
 ## **ADDPRE CHANNEL**
 
