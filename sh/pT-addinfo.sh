@@ -29,7 +29,7 @@ if [ "$exists" -eq 0 ]; then
     mysql -h "$db_host" -u "$db_user" -p"$db_password" "$db_name" -e "$query" > /dev/null 2>&1
 
     # Echo the INFO line
-    echo "11[INFO] :: $release :: 11FILES: $files :: 11SIZE: $size"
+    echo "11[INFO] :: $release :: 11FILES: $files :: 11SIZE: $size MiB"
 else
     # Construct MySQL query to update existing record
     query="UPDATE $db_table 
