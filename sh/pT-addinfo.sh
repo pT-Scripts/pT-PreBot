@@ -28,7 +28,7 @@ execute_query() {
     fi
 }
 
-# Check if rlsname already exists in MAIN table
+# Check if rlsname already exists in MAIN table and status is not ADDINFO
 exists=$(mysql -h "$db_host" -u "$db_user" -p"$db_password" "$db_name" --skip-column-names --batch -se "SELECT COUNT(*) FROM $db_table WHERE rlsname='$release' AND status <> 'ADDINFO';" 2>/dev/null)
 
 if [ "$exists" -eq 1 ]; then
@@ -38,7 +38,7 @@ if [ "$exists" -eq 1 ]; then
                size = '$size',
                lastupdated = '$current_datetime',
                status = 'ADDINFO'
-           WHERE rlsname = '$release';"
+           WHERE rlsname = '$release' AND status <> 'ADDINFO';"
 
     # Execute the MySQL update query
     execute_query "$query"
