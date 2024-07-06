@@ -1,9 +1,13 @@
 [![ptprebotlogo.png](https://i.postimg.cc/VkX7xBFr/ptprebotlogo.png)](https://postimg.cc/jDdQNfmt)
 
-# pT-PreBot v1.0 by Petabyte
+# pT-PreBot v1.1 by Petabyte
 
 **Description:**  
 pT-PreBot is an IRC bot designed for managing pre-release data and integrating with MySQL databases, specifically tailored for eggdrop bots.
+
+# **Changelog v1.1**
+
+- Bug Fixes: Various bug fixes and optimizations for better performance and reliability.
 
 ## Features:
 - **Fast Addpre System for Insert to database, that Supports:** !addpre !info !genre !addurl !nuke !unnuke
