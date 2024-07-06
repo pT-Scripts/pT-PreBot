@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # MySQL database configuration
-db_host="133.133.133.133"
-db_user="someuser"
-db_password="somepass"
-db_name="YourDBname"
-main_table="MAIN" # Dont edit if you using included .sql structure
+db_host=""
+db_user=""
+db_password=""
+db_name=""    # Updated database name
+main_table="MAIN" # MAIN table name
 
 # Main script logic
 if [ $# -lt 2 ]; then
