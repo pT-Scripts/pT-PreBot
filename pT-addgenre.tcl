@@ -20,4 +20,3 @@ proc gnStats {nick host handle channel text} {
 
     }
 }
-
