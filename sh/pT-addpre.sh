@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # MySQL database connection details
-db_host="133.133.133.133"
-db_user="someuser"
-db_password="somepass"
-db_name="YourDBname"
-db_table="MAIN"
+db_host=""
+db_user=""
+db_password=""
+db_name=""
+db_table="MAIN"  # Assuming MAIN is the main table
 
 # Main script logic
 if [ $# -lt 2 ]; then
@@ -27,6 +27,11 @@ if [ -z "$existing_release" ]; then
     # Release does not exist, insert new record with status ADDPRE and section
     query="INSERT INTO $db_table (rlsname, section, datetime, lastupdated, status, \`group\`) 
            VALUES ('$release', '$section', '$current_datetime', '$current_datetime', 'ADDPRE', '$groupname');"
+    # Execute MySQL query silently
+    mysql -h "$db_host" -u "$db_user" -p"$db_password" "$db_name" -e "$query" > /dev/null 2>&1
+
+    # Echo the output in the required format
+    echo "11[PRE] ::7 $section :: $release"
 else
     # Release exists, update section
     query="UPDATE $db_table 
@@ -34,8 +39,6 @@ else
                lastupdated = '$current_datetime',
                \`group\` = '$groupname'
            WHERE rlsname = '$release';"
+    # Execute MySQL query silently
+    mysql -h "$db_host" -u "$db_user" -p"$db_password" "$db_name" -e "$query" > /dev/null 2>&1
 fi
-
-# Execute MySQL query silently
-mysql -h "$db_host" -u "$db_user" -p"$db_password" "$db_name" -e "$query" > /dev/null 2>&1
-
