@@ -21,7 +21,7 @@ current_datetime=$(date '+%Y-%m-%d %H:%M:%S')  # Current datetime in the format 
 # Function to execute MySQL queries and handle errors
 execute_query() {
     local query="$1"
-    mysql -h "$db_host" -u "$db_user" -p"$db_password" "$db_name" -e "$query" > /dev/null 2>&1
+    mysql -h "$db_host" -u "$db_user" -p"$db_password" "$db_name" --skip-column-names --batch -e "$query"
     if [ $? -ne 0 ]; then
         echo "Error: MySQL query execution failed: $query"
         exit 1
@@ -29,7 +29,7 @@ execute_query() {
 }
 
 # Check if rlsname already exists in MAIN table
-exists=$(mysql -h "$db_host" -u "$db_user" -p"$db_password" "$db_name" -se "SELECT COUNT(*) FROM $db_table WHERE rlsname='$release' AND status <> 'ADDINFO';" 2>/dev/null)
+exists=$(mysql -h "$db_host" -u "$db_user" -p"$db_password" "$db_name" --skip-column-names --batch -se "SELECT COUNT(*) FROM $db_table WHERE rlsname='$release' AND status <> 'ADDINFO';" 2>/dev/null)
 
 if [ "$exists" -eq 1 ]; then
     # Release exists and status is not ADDINFO, update existing record
@@ -39,10 +39,10 @@ if [ "$exists" -eq 1 ]; then
                lastupdated = '$current_datetime',
                status = 'ADDINFO'
            WHERE rlsname = '$release';"
-    
+
     # Execute the MySQL update query
     execute_query "$query"
-    
+
     # Echo the INFO line for update
     echo "11[INFO] :: $release :: 11FILES: $files :: 11SIZE: $size"
 fi
