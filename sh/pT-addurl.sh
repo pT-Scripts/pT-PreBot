@@ -1,15 +1,15 @@
 #!/bin/bash
 
 # MySQL database configuration
-db_host="133.133.133.133"
-db_user="someuser"
-db_password="somepass"
-db_name="YourDBname"
-db_name="ADD"
-xtra_table="XTRA"
+db_host=""
+db_user=""
+db_password=""
+db_name=""    # Updated database name
+xtra_table="XTRA" # XTRA table name for additional URLs
 
 # Main script logic
 if [ $# -lt 2 ]; then
+    echo "Usage: $0 <release> <url>"
     exit 1
 fi
 
@@ -27,4 +27,7 @@ if [ "$exists" -eq 0 ]; then
 
     # Execute MySQL query silently
     mysql -h "$db_host" -u "$db_user" -p"$db_password" "$db_name" -e "$query" > /dev/null 2>&1
+
+    # Echo the INFO line
+    echo "12[URL] :: $release :: $url"
 fi
