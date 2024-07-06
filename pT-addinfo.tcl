@@ -1,7 +1,7 @@
 # Command handler for !info
 bind pub - !info infoStats
 
-proc addStats {nick host handle channel text} {
+proc infoStats {nick host handle channel text} {
     global eggdrop
 
     # Execute the shell script with the text after !addpre as arguments
