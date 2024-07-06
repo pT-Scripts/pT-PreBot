@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # MySQL database connection details
-db_host="133.133.133.133"
-db_user="someuser"
-db_password="somepass"
-db_name="YourDBname"
+db_host=""
+db_user=""
+db_password=""
+db_name=""
 db_table="MAIN"  # Assuming MAIN is the main table
 
 # Main script logic
@@ -25,6 +25,11 @@ if [ "$exists" -eq 0 ]; then
     # Construct MySQL query to insert new record with status ADDPRE
     query="INSERT INTO $db_table (rlsname, files, size, datetime, lastupdated, status) 
            VALUES ('$release', '$files', '$size', '$current_datetime', '$current_datetime', 'ADDPRE');"
+    # Execute MySQL query silently
+    mysql -h "$db_host" -u "$db_user" -p"$db_password" "$db_name" -e "$query" > /dev/null 2>&1
+
+    # Echo the INFO line
+    echo "11[INFO] :: $release :: 11FILES: $files :: 11SIZE: $size"
 else
     # Construct MySQL query to update existing record
     query="UPDATE $db_table 
@@ -32,10 +37,8 @@ else
                size = '$size',
                lastupdated = '$current_datetime'
            WHERE rlsname = '$release';"
+    # Execute MySQL query silently
+    mysql -h "$db_host" -u "$db_user" -p"$db_password" "$db_name" -e "$query" > /dev/null 2>&1
 fi
 
-# Execute MySQL query silently
-mysql -h "$db_host" -u "$db_user" -p"$db_password" "$db_name" -e "$query" > /dev/null 2>&1
-
 exit 0
-
