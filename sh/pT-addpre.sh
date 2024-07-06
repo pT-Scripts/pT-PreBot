@@ -5,7 +5,7 @@ db_host="133.133.133.133"
 db_user="someuser"
 db_password="somepass"
 db_name="YourDBname"
-db_table="MAIN"  # Assuming MAIN is the main table
+db_table="MAIN"
 
 # Main script logic
 if [ $# -lt 2 ]; then
