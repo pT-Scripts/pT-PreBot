@@ -58,6 +58,11 @@ Ensure you have the following set up before installing pT-PreBot:
 
 NOTE: If you are using dbschema.sql then dont edit tables, if you running own database make sure to change info and coloumns in .sh files
 
+## **PreDB.net API Settings**
+- If you want to disable this module , comment in pT-pre.tcl
+   
+#set script_path2 "/eggdrop/scripts/sh/pT-preapi.sh"
+
 ## **ADDPRE CHANNEL**
 
 Ensure your eggdrop bot is in a addpre channel that outputs following formats:
@@ -83,3 +88,4 @@ Simulate the !db command:
 
 Simulate the !group command:
 ./pT-group.sh SURCODE
+
