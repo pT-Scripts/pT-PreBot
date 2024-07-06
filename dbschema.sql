@@ -8,7 +8,7 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 -- Dumping structure for tabel ADD.MAIN
-CREATE TABLE IF NOT EXISTS `MAIN` (
+SHOW CREATE TABLE `MAIN` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `rlsname` varchar(256) DEFAULT NULL COMMENT 'Full release name',
   `group` varchar(50) DEFAULT NULL COMMENT 'The group that released the release',
@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS `MAIN` (
 -- Data exporting was unselected.
 
 -- Dumping structure for tabel ADD.NUKE
-CREATE TABLE IF NOT EXISTS `NUKE` (
+SHOW CREATE TABLE `NUKE` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `rlsname` varchar(256) CHARACTER SET latin1 NOT NULL,
   `group` varchar(50) CHARACTER SET latin1 DEFAULT '',
@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS `NUKE` (
 -- Data exporting was unselected.
 
 -- Dumping structure for tabel ADD.XTRA
-CREATE TABLE IF NOT EXISTS `XTRA` (
+SHOW CREATE TABLE `XTRA` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `rlsname` varchar(256) DEFAULT NULL COMMENT 'Full release name',
   `lastupdated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Date and time of last modification',
