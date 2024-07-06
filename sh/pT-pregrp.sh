@@ -1,20 +1,20 @@
 #!/bin/bash
 
 # Database credentials
-db_host="133.133.133.133"
-db_user="someuser"
-db_password="somepass"
-db_name="YourDBname"
+DB_HOST=""
+DB_USER=""
+DB_PASS=""
+DB_NAME=""
 DB_TABLE_MAIN="MAIN"
 DB_TABLE_NUKE="NUKE"
 
 # Base MySQL command
 MYSQL_CMD="mysql -h $DB_HOST -u $DB_USER -p$DB_PASS -D $DB_NAME -s -N -e"
 
-# Function to execute MySQL queries and suppress warnings
+# Function to execute MySQL queries
 execute_query() {
   local query="$1"
-  $MYSQL_CMD "$query" 2>/dev/null  # Redirect stderr to /dev/null
+  $MYSQL_CMD "$query"
 }
 
 # Function to calculate time elapsed since a given datetime
@@ -187,4 +187,3 @@ if [ -n "$last_unnuked" ]; then
 else
   echo "No unnuked releases found."
 fi
-
