@@ -5,8 +5,8 @@ db_host="133.133.133.133"
 db_user="someuser"
 db_password="somepass"
 db_name="YourDBname"
-db_name="ADD"    # Updated database name
-xtra_table="XTRA" # XTRA table name for additional URLs
+db_name="ADD"
+xtra_table="XTRA"
 
 # Main script logic
 if [ $# -lt 2 ]; then
