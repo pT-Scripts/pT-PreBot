@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # MySQL database configuration
-db_host="133.133.133.133"
-db_user="someuser"
-db_password="somepass"
-db_name="YourDBname"
+db_host=""
+db_user=""
+db_password=""
+db_name=""
 nuke_table="NUKE"
 main_table="MAIN"
 xtra_table="XTRA"
