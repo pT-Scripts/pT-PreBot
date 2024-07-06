@@ -9,12 +9,12 @@ DB_TABLE_MAIN="MAIN"
 DB_TABLE_NUKE="NUKE"
 
 # Base MySQL command
-MYSQL_CMD="mysql -h $db_host -u $db_user -p$db_pass -D $db_name -s -N -e"
+MYSQL_CMD="mysql -h $DB_HOST -u $DB_USER -p$DB_PASS -D $DB_NAME -s -N -e"
 
-# Function to execute MySQL queries
+# Function to execute MySQL queries and suppress warnings
 execute_query() {
   local query="$1"
-  $MYSQL_CMD "$query"
+  $MYSQL_CMD "$query" 2>/dev/null  # Redirect stderr to /dev/null
 }
 
 # Function to calculate time elapsed since a given datetime
