@@ -2,7 +2,7 @@
 
 # MySQL database connection details
 db_host=""
-db_user=""
+db_user="w"
 db_password=""
 db_name=""
 db_table="MAIN"  # Assuming MAIN is the main table
