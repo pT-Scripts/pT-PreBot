@@ -46,7 +46,7 @@ if [ "$exists" -eq 1 ]; then
     echo "11[INFO] :: $release :: 11UPDATED: $files :: 11SIZE: $size"
 else
     # Release does not exist, so we skip
-    echo "Release $release does not exist in the database. Skipping..."
+    #echo "Release $release does not exist in the database. Skipping..."
 fi
 
 exit 0
