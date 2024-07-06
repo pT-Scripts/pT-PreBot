@@ -7,7 +7,7 @@ pT-PreBot is an IRC bot designed for managing pre-release data and integrating w
 
 ## Features:
 - **Fast Addpre System for Insert to database, that Supports:** !addpre !info !genre !addurl !nuke !unnuke !addold !oldinfo
-- **IRC announce for PRE / INFO / URL**
+- **IRC announce for PRE / INFO / URL / NUKE / UNNUKE**
 - **Extended Search System that Supports:** !pre !dupe !group !db
 - **Full Database stats using !db showing:**
   Total releases
