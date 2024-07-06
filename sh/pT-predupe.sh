@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Database credentials
-db_host="133.133.133.133"
-db_user="someuser"
-db_password="somepass"
-db_name="YourDBname"
+DB_HOST=""
+DB_USER=""
+DB_PASS=""
+DB_NAME=""
 DB_TABLE_MAIN="MAIN"
 DB_TABLE_NUKE="NUKE"
 DB_TABLE_XTRA="XTRA"
@@ -12,7 +12,7 @@ DB_TABLE_XTRA="XTRA"
 # Function to execute MySQL queries
 execute_query() {
   local query="$1"
-  mysql -h "$db_host" -u "$db_user" -p"$db_pass" -D "$db_name" -s -N -e "$query" 2>/dev/null
+  mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASS" -D "$DB_NAME" -s -N -e "$query" 2>/dev/null
 }
 
 # Function to fetch details (size, files, datetime, and any XTRA fields) for a release
@@ -182,4 +182,3 @@ else
     fi
   done <<< "$query_results"
 fi
-
