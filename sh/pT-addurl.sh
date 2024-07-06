@@ -22,10 +22,9 @@ exists=$(mysql -h "$db_host" -u "$db_user" -p"$db_password" "$db_name" -se "SELE
 
 if [ "$exists" -eq 0 ]; then
     # Construct MySQL query to insert new record
-    query="INSERT INTO $xtra_table (rlsname, lastupdated, addurl, \`group\`, tvmaze, imdb, screen, sfv, nfo, m3u) 
-           VALUES ('$release', '$current_datetime', '$url', NULL, NULL, NULL, NULL, NULL, NULL, NULL);"
+    query="INSERT INTO $xtra_table (rlsname, lastupdated, addurl) 
+           VALUES ('$release', '$current_datetime', '$url');"
 
     # Execute MySQL query silently
     mysql -h "$db_host" -u "$db_user" -p"$db_password" "$db_name" -e "$query" > /dev/null 2>&1
 fi
-
