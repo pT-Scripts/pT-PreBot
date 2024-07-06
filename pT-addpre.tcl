@@ -1,5 +1,3 @@
-# pT-addpre.tcl
-
 # Command handler for !addpre
 bind pub - !addpre addStats
 
@@ -13,10 +11,9 @@ proc addStats {nick host handle channel text} {
     # Split the result into lines
     set lines [split $result \n]
 
-    # Send each line as a private message to the user
+    # Announce each line to the specified channel
     foreach line $lines {
-        # Applying IRC colors for enhanced readability (modify as needed)
-        set colored_line "$line"
+        # Sending the line to the #destiny.site channel
+        putserv "PRIVMSG #somechan :$line"
     }
 }
-
