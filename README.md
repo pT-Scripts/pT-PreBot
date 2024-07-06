@@ -5,8 +5,6 @@
 **Description:**  
 pT-PreBot is an IRC bot designed for managing pre-release data and integrating with MySQL databases, specifically tailored for eggdrop bots.
 
-- Bug Fixes: Various bug fixes and optimizations for better performance and reliability.
-
 ## Features:
 - **Fast Addpre System for Insert to database, that Supports:** !addpre !info !genre !addurl !nuke !unnuke
 - **Extended Search System that Supports:** !pre !dupe !group !db
