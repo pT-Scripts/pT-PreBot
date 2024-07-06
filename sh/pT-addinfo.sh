@@ -29,24 +29,22 @@ execute_query() {
 }
 
 # Check if rlsname already exists in MAIN table
-exists=$(mysql -h "$db_host" -u "$db_user" -p"$db_password" "$db_name" -se "SELECT COUNT(*) FROM $db_table WHERE rlsname='$release';" 2>/dev/null)
+exists=$(mysql -h "$db_host" -u "$db_user" -p"$db_password" "$db_name" -se "SELECT COUNT(*) FROM $db_table WHERE rlsname='$release' AND status <> 'ADDINFO';" 2>/dev/null)
 
 if [ "$exists" -eq 1 ]; then
-    # Release exists, update existing record
+    # Release exists and status is not ADDINFO, update existing record
     query="UPDATE $db_table 
            SET files = '$files',
                size = '$size',
-               lastupdated = '$current_datetime'
+               lastupdated = '$current_datetime',
+               status = 'ADDINFO'
            WHERE rlsname = '$release';"
     
     # Execute the MySQL update query
     execute_query "$query"
     
     # Echo the INFO line for update
-    echo "11[INFO] :: $release :: 11UPDATED: $files :: 11SIZE: $size"
-else
-    # Release does not exist, so we skip
-    #echo "Release $release does not exist in the database. Skipping..."
+    echo "11[INFO] :: $release :: 11FILES: $files :: 11SIZE: $size"
 fi
 
 exit 0
