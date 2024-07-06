@@ -14,6 +14,6 @@ proc unnukeStats {nick host handle channel text} {
     # Announce each line to the specified channel
     foreach line $lines {
         # Sending the line to the #destiny.site channel
-        putserv "PRIVMSG #destiny.site :$line"
+        putserv "PRIVMSG #somechan :$line"
     }
 }
