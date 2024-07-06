@@ -83,6 +83,8 @@ Ensure your eggdrop bot is in a addpre channel that outputs following formats:
 !gn <release> <genre>
 !nuke <release> <reason> <nukenet>
 !unnuke <release> <reason> <nukenet>
+!addold <release> <datetime>
+!oldinfo <release> <files> <size>
 
 **Testing pT-PreBot:*
 Verify that pT-PreBot .sh script is functioning correctly by testing each command in terminal executing shell script:
