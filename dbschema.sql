@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS `MAIN` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `rlsname_uniq` (`rlsname`) USING BTREE,
   KEY `rls_status` (`status`) USING BTREE
-) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
