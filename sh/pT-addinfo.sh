@@ -28,10 +28,15 @@ execute_query() {
     fi
 }
 
-# Check if rlsname already exists in MAIN table and status is not ADDINFO
-exists=$(mysql -h "$db_host" -u "$db_user" -p"$db_password" "$db_name" --skip-column-names --batch -se "SELECT COUNT(*) FROM $main_table WHERE rlsname='$release' AND status <> 'ADDINFO';" 2>/dev/null)
+# Check if rlsname already exists in MAIN table and status is ADDINFO
+status=$(mysql -h "$db_host" -u "$db_user" -p"$db_password" "$db_name" --skip-column-names --batch -se "SELECT status FROM $main_table WHERE rlsname='$release';" 2>/dev/null)
 
-if [ "$exists" -eq 1 ]; then
+if [ "$status" == "ADDINFO" ]; then
+    # Release exists and status is ADDINFO, skip processing
+    exit 0
+fi
+
+if [ "$status" != "" ]; then
     # Release exists and status is not ADDINFO, update existing record
     query="UPDATE $main_table 
            SET files = '$files',
