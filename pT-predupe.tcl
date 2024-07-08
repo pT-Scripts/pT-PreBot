@@ -1,4 +1,4 @@
-# pT-predupe.tcl
+# dupestats.tcl
 
 # Command handler for !dupe
 bind pub - !dupe dupeStats
@@ -31,4 +31,3 @@ proc dupeStats {nick host handle channel text} {
         putquick "PRIVMSG $nick :$colored_line"
     }
 }
-
