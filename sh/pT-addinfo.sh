@@ -5,7 +5,7 @@ db_host=""
 db_user=""
 db_password=""
 db_name=""
-db_table="MAIN"  # Assuming MAIN is the main table
+main_table="MAIN"  # Assuming MAIN is the main table
 
 # Main script logic
 if [ $# -lt 3 ]; then
@@ -29,11 +29,11 @@ execute_query() {
 }
 
 # Check if rlsname already exists in MAIN table and status is not ADDINFO
-exists=$(mysql -h "$db_host" -u "$db_user" -p"$db_password" "$db_name" --skip-column-names --batch -se "SELECT COUNT(*) FROM $db_table WHERE rlsname='$release' AND status <> 'ADDINFO';" 2>/dev/null)
+exists=$(mysql -h "$db_host" -u "$db_user" -p"$db_password" "$db_name" --skip-column-names --batch -se "SELECT COUNT(*) FROM $main_table WHERE rlsname='$release' AND status <> 'ADDINFO';" 2>/dev/null)
 
 if [ "$exists" -eq 1 ]; then
     # Release exists and status is not ADDINFO, update existing record
-    query="UPDATE $db_table 
+    query="UPDATE $main_table 
            SET files = '$files',
                size = '$size',
                lastupdated = '$current_datetime',
@@ -44,7 +44,7 @@ if [ "$exists" -eq 1 ]; then
     execute_query "$query"
 
     # Echo the INFO line for update
-    echo "11[INFO] :: $release :: 11FILES: $files :: 11SIZE: $size"
+    echo "11[INFO]04 -> $release 04-> 11FiLES: $files 04-> 11SiZE: $size 11MiB"
 fi
 
 exit 0
