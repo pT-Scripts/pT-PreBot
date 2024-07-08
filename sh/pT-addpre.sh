@@ -16,6 +16,7 @@ fi
 release="$1"
 section="$2"
 current_datetime=$(date '+%Y-%m-%d %H:%M:%S')
+current_unixtime=$(date '+%s')
 
 # Function to execute MySQL queries and handle errors
 execute_query() {
@@ -36,8 +37,8 @@ if [ -n "$existing_release" ]; then
 fi
 
 # Insert new record since release does not exist
-query="INSERT INTO $db_table (rlsname, section, datetime, lastupdated, status, \`group\`)
-       VALUES ('$release', '$section', '$current_datetime', '$current_datetime', 'ADDPRE', SUBSTRING_INDEX('$release', '-', -1));"
+query="INSERT INTO $db_table (rlsname, section, datetime, lastupdated, status, \`group\`, unixtime)
+       VALUES ('$release', '$section', '$current_datetime', '$current_datetime', 'ADDPRE', SUBSTRING_INDEX('$release', '-', -1), '$current_unixtime');"
 
 execute_query "$query"
 
