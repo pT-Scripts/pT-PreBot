@@ -3,7 +3,7 @@
 # Database credentials
 db_host=""
 db_user=""
-db_pass=""
+db_password=""
 db_name=""
 main_table="MAIN"
 nuke_table="NUKE"
@@ -12,7 +12,7 @@ xtra_table="XTRA"
 # Function to execute MySQL queries
 execute_query() {
   local query="$1"
-  mysql -h "$db_host" -u "$db_user" -p"$db_pass" -D "$db_name" -s -N -e "$query" 2>/dev/null
+  mysql -h "$db_host" -u "$db_user" -p"$db_password" -D "$db_name" -s -N -e "$query" 2>/dev/null
 }
 
 # Function to fetch details (size, files, datetime, and any XTRA fields) for a release
