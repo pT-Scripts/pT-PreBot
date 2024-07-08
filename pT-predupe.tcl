@@ -17,7 +17,7 @@ proc dupeStats {nick host handle channel text} {
     set lines [split $result \n]
 
     # Send the initial search message
-    putquick "PRIVMSG $nick :DUPE SEARCH - Showing max 25 results. Improve your search keywords for better filtering."
+    putquick "PRIVMSG $nick :DUPE SEARCH - Showing max 35 results. Improve your search keywords for better filtering."
 
     # Send each line as a private message to the user
     foreach line $lines {
