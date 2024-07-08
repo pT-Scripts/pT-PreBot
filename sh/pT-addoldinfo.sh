@@ -5,7 +5,7 @@ db_host=""
 db_user=""
 db_password=""
 db_name=""
-db_table="MAIN"  # Assuming MAIN is the main table
+main_table="MAIN"  # Assuming MAIN is the main table
 
 # Main script logic
 if [ $# -ne 3 ]; then
@@ -26,15 +26,15 @@ fi
 current_datetime=$(date '+%Y-%m-%d %H:%M:%S')
 
 # Check if release already exists in the database
-existing_release=$(mysql -h "$db_host" -u "$db_user" -p"$db_password" "$db_name" -N -B -e "SELECT rlsname FROM $db_table WHERE rlsname='$release';")
+existing_release=$(mysql -h "$db_host" -u "$db_user" -p"$db_password" "$db_name" -N -B -e "SELECT rlsname FROM $main_table WHERE rlsname='$release';")
 
 if [ -z "$existing_release" ]; then
     # Release does not exist, insert new record with status ADDOLD
-    query="INSERT INTO $db_table (rlsname, files, size, lastupdated, status) 
+    query="INSERT INTO $main_table (rlsname, files, size, lastupdated, status) 
            VALUES ('$release', '$files', '$size', '$current_datetime', 'ADDOLD');"
 else
     # Release exists, update files, size, and set status to ADDOLD
-    query="UPDATE $db_table 
+    query="UPDATE $main_table 
            SET files = '$files',
                size = '$size',
                lastupdated = '$current_datetime',
