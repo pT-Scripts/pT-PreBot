@@ -6,7 +6,7 @@
 pT-PreBot is an IRC bot designed for managing pre-release data and integrating with MySQL databases, specifically tailored for eggdrop bots.
 
 ## Features:
-- **Fast Addpre System for Insert to database, that Supports:** !addpre !info !genre !addurl !nuke !unnuke !addold !oldinfo
+- **Fast Addpre System for Insert to database, that Supports:** !addpre !info !genre !addurl !nuke !unnuke !addold !oldinfo !addsfv !addnfo !addjpg !addm3u
 - **IRC announce for PRE / INFO / URL / NUKE / UNNUKE**
 - **Extended Search System that Supports:** !pre !dupe !group !db
 - **Full Database stats using !db showing:**
@@ -85,6 +85,10 @@ Ensure your eggdrop bot is in a addpre channel that outputs following formats:
 !unnuke <release> <reason> <nukenet>
 !addold <release> <datetime>
 !oldinfo <release> <files> <size>
+!addsfv <release> <urltosfv>
+!addnfo <release> <urltonfo>
+!addjpg <release> <urltojpg>
+!addm3u <release> <urltom3u>
 
 **Testing pT-PreBot:*
 Verify that pT-PreBot .sh script is functioning correctly by testing each command in terminal executing shell script:
