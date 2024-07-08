@@ -88,16 +88,35 @@ if [ -n "$details" ]; then
   read -r rlsname size files genre section datetime sfv nfo jpg addurl <<< "$details"
   
   # Format size to remove decimals and unnecessary zeros
-  size_human_readable=$(printf "%.0f" "$size")
+  if [ "$size" != "NULL" ]; then
+    size_human_readable=$(printf "%.0f" "$size")
+  else
+    size_human_readable="Unknown"
+  fi
   
+  # Format files count to handle NULL
+  if [ "$files" != "NULL" ]; then
+    files_count="$files"
+  else
+    files_count="Unknown"
+  fi
+
+  # Format genre to handle NULL
+  if [ "$genre" != "NULL" ]; then
+    formatted_genre="11GENRE: $genre"
+  else
+    formatted_genre=""
+  fi
+
   # Calculate time since and format the output
   time_since=$(calculate_time_since "$datetime")
   
   # Prepare output with mIRC color codes
-  output="07[RELEASE] $rlsname -> 12SIZE: ${size_human_readable} MB :: 12FILES: $files"
+  output="07[RELEASE] $rlsname -> 12SIZE: ${size_human_readable} MB :: 12FILES: $files_count"
   output+="\n09PRED: $time_since ago"
-  if [ -n "$genre" ] && [ "$genre" != "NULL" ]; then
-    output+="\n11GENRE: $genre"
+  
+  if [ -n "$formatted_genre" ]; then
+    output+="\n$formatted_genre"
   fi
   
   # Check if rlsname is marked as NUKED or UNNUKED and get reason
@@ -111,23 +130,26 @@ if [ -n "$details" ]; then
     fi
   fi
   
-  if [ -n "$section" ] && [ "$section" != "NULL" ]; then
+  if [ "$section" != "NULL" ]; then
     output+="\n15SECTION: $section"
   fi
    
-  if [ -n "$addurl" ] && [ "$addurl" != "NULL" ]; then
+  if [ "$addurl" != "NULL" ]; then
     output+="\n10URL: $addurl"
   fi
   
-  if [ -n "$sfv" ] && [ "$sfv" != "NULL" ]; then
+  output+="\n "
+  output+="\n07[www.PreDB.ws]"
+  
+  if [ "$sfv" != "NULL" ]; then
     output+="\n09SFV: $sfv"
   fi
   
-  if [ -n "$nfo" ] && [ "$nfo" != "NULL" ]; then
+  if [ "$nfo" != "NULL" ]; then
     output+="\n12NFO: $nfo"
   fi
   
-  if [ -n "$jpg" ] && [ "$jpg" != "NULL" ]; then
+  if [ "$jpg" != "NULL" ]; then
     output+="\n13JPG: $jpg"
   fi
 
