@@ -5,7 +5,7 @@ db_host=""
 db_user=""
 db_password=""
 db_name=""
-db_table="MAIN"
+main_table="MAIN"
 
 # Validate input arguments
 if [ $# -lt 2 ]; then
@@ -30,19 +30,19 @@ execute_query() {
 
 # Check if release already exists
 existing_release=$(mysql -h "$db_host" -u "$db_user" -p"$db_password" "$db_name" -N -B -e \
-    "SELECT rlsname FROM $db_table WHERE rlsname='$release';")
+    "SELECT rlsname FROM $main_table WHERE rlsname='$release';")
 
 if [ -n "$existing_release" ]; then
     exit 0
 fi
 
 # Insert new record since release does not exist
-query="INSERT INTO $db_table (rlsname, section, datetime, lastupdated, status, \`group\`, unixtime)
+query="INSERT INTO $main_table (rlsname, section, datetime, lastupdated, status, \`group\`, unixtime)
        VALUES ('$release', '$section', '$current_datetime', '$current_datetime', 'ADDPRE', SUBSTRING_INDEX('$release', '-', -1), '$current_unixtime');"
 
 execute_query "$query"
 
 # Echo the output in the required format
-echo "11[PRE] ::7 $section :: $release"
+echo "11[PRE] iN 07$section04 -> $release"
 
 exit 0
