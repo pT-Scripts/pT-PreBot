@@ -29,7 +29,8 @@ if [ "$results" -eq 0 ]; then
 fi
 
 # Print the results in the desired format
-echo "11[BACKUP] - Searching 07PreDB.Net10 API"
+echo "-"
+echo "11[PreDB.Net] - Fetching from API"
 
 # Loop through each result and format output
 echo "$response" | jq -r '.data[] | select(.nfo != null) | "\(.release) :: \(if .pretime then (.pretime | tonumber | strftime("%Y-%m-%d %H:%M:%S")) else empty end) :: 12SECTION: \(.section) :: 12URL: https://predb.net\(.url) ::"' | while IFS='' read -r line; do
@@ -79,4 +80,3 @@ echo "$response" | jq -r '.data[] | select(.nfo != null) | "\(.release) :: \(if 
 done
 
 exit 0
-
