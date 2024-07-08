@@ -7,7 +7,7 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
--- Dumping structure for tabel WS.MAIN
+-- Dumping structure for table WS.MAIN
 CREATE TABLE IF NOT EXISTS `MAIN` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `rlsname` varchar(256) DEFAULT NULL COMMENT 'Full release name',
@@ -52,11 +52,11 @@ CREATE TABLE IF NOT EXISTS `MAIN` (
   KEY `idx_nukereason_main` (`nukereason`),
   KEY `idx_genre_main` (`genre`),
   KEY `idx_unixtime_main` (`unixtime`)
-) ENGINE=InnoDB AUTO_INCREMENT=31886399 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- Data exporting was unselected.
 
--- Dumping structure for tabel WS.NUKE
+-- Dumping structure for table WS.NUKE
 CREATE TABLE IF NOT EXISTS `NUKE` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `rlsname` varchar(256) CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT NULL,
@@ -80,11 +80,11 @@ CREATE TABLE IF NOT EXISTS `NUKE` (
   KEY `idx_status_nuke` (`status`),
   KEY `idx_reason_nuke` (`reason`),
   KEY `idx_nukenet_nuke` (`nukenet`)
-) ENGINE=InnoDB AUTO_INCREMENT=506405 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- Data exporting was unselected.
 
--- Dumping structure for tabel WS.XTRA
+-- Dumping structure for table WS.XTRA
 CREATE TABLE IF NOT EXISTS `XTRA` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `rlsname` varchar(256) DEFAULT NULL COMMENT 'Full release name',
@@ -112,7 +112,7 @@ CREATE TABLE IF NOT EXISTS `XTRA` (
   KEY `idx_sfv_xtra` (`sfv`),
   KEY `idx_nfo_xtra` (`nfo`),
   KEY `idx_m3u_xtra` (`m3u`)
-) ENGINE=InnoDB AUTO_INCREMENT=28405 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci ROW_FORMAT=DYNAMIC;
 
 -- Data exporting was unselected.
 
