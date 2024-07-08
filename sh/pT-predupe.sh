@@ -1,18 +1,18 @@
 #!/bin/bash
 
 # Database credentials
-DB_HOST=""
-DB_USER=""
-DB_PASS=""
-DB_NAME=""
-DB_TABLE_MAIN="MAIN"
-DB_TABLE_NUKE="NUKE"
-DB_TABLE_XTRA="XTRA"
+db_host=""
+db_user=""
+db_pass=""
+db_name=""
+main_table="MAIN"
+nuke_table="NUKE"
+xtra_table="XTRA"
 
 # Function to execute MySQL queries
 execute_query() {
   local query="$1"
-  mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASS" -D "$DB_NAME" -s -N -e "$query" 2>/dev/null
+  mysql -h "$db_host" -u "$db_user" -p"$db_pass" -D "$db_name" -s -N -e "$query" 2>/dev/null
 }
 
 # Function to fetch details (size, files, datetime, and any XTRA fields) for a release
@@ -21,14 +21,14 @@ fetch_release_details() {
   local main_fields="m.files, m.size, m.datetime"
   local xtra_fields="x.sfv, x.nfo, x.jpg, x.addurl, x.m3u"
 
-  local details_query="SELECT $main_fields, $xtra_fields FROM $DB_TABLE_MAIN AS m LEFT JOIN $DB_TABLE_XTRA AS x ON m.rlsname = x.rlsname WHERE m.rlsname='$rlsname';"
+  local details_query="SELECT $main_fields, $xtra_fields FROM $main_table AS m LEFT JOIN $xtra_table AS x ON m.rlsname = x.rlsname WHERE m.rlsname='$rlsname';"
   execute_query "$details_query"
 }
 
 # Function to check if a release is NUKE and get reason if NUKE'd
 check_if_nuked() {
   local rlsname="$1"
-  local nuke_query="SELECT reason FROM $DB_TABLE_NUKE WHERE rlsname='$rlsname';"
+  local nuke_query="SELECT reason FROM $nuke_table WHERE rlsname='$rlsname';"
   local nuke_result=$(execute_query "$nuke_query")
   if [ -n "$nuke_result" ]; then
     echo "04[NUKED] $nuke_result"
@@ -92,7 +92,7 @@ if [ -z "$keywords" ]; then
 fi
 
 # Construct the search query to find records with all keywords in rlsname, ordered by datetime descending
-search_query="SELECT m.rlsname, m.files, m.size, m.datetime, x.sfv, x.nfo, x.jpg, x.addurl, x.m3u FROM $DB_TABLE_MAIN AS m LEFT JOIN $DB_TABLE_XTRA AS x ON m.rlsname = x.rlsname WHERE "
+search_query="SELECT m.rlsname, m.files, m.size, m.datetime, x.sfv, x.nfo, x.jpg, x.addurl, x.m3u FROM $main_table AS m LEFT JOIN $xtra_table AS x ON m.rlsname = x.rlsname WHERE "
 
 # Split keywords into an array
 IFS=' ' read -r -a keyword_array <<< "$keywords"
