@@ -99,12 +99,12 @@ if [ -n "$details" ]; then
   # Format size to remove decimals and unnecessary zeros
   if [ "$size" != "NULL" ]; then
     size_human_readable=$(printf "%.0f" "$size")
-    output+=" :: 12SIZE: ${size_human_readable} MB"
+    output+=" :: 12SIZE: ${size_human_readable} MB"
   fi
   
   # Format files count to handle NULL
   if [ "$files" != "NULL" ]; then
-    output+=" :: 12FILES: $files"
+    output+=" :: 12FILES: $files"
   fi
 
   # Calculate time since and format the output
