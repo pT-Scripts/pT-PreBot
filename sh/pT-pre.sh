@@ -18,8 +18,14 @@ execute_query() {
 # Function to fetch release details including SFV, NFO, JPG, URL from MAIN and XTRA tables
 fetch_release_details() {
   local rlsname="$1"
-  local query="SELECT m.rlsname, m.size, m.files, m.genre, m.section, UNIX_TIMESTAMP(m.datetime),
-                      x.sfv, x.nfo, x.jpg, x.addurl
+  local query="SELECT m.rlsname, 
+                      COALESCE(m.size, 'NULL'), 
+                      COALESCE(m.files, 'NULL'), 
+                      UNIX_TIMESTAMP(m.datetime),
+                      COALESCE(x.sfv, 'NULL'), 
+                      COALESCE(x.nfo, 'NULL'), 
+                      COALESCE(x.jpg, 'NULL'), 
+                      COALESCE(x.addurl, 'NULL')
                FROM $DB_TABLE_MAIN AS m
                LEFT JOIN $DB_TABLE_XTRA AS x ON m.rlsname = x.rlsname
                WHERE m.rlsname='$rlsname';"
@@ -85,62 +91,29 @@ rlsname="$1"
 # Fetch release details including SFV, NFO, JPG, URL from MAIN and XTRA tables
 details=$(fetch_release_details "$rlsname")
 if [ -n "$details" ]; then
-  read -r rlsname size files genre section datetime sfv nfo jpg addurl <<< "$details"
+  read -r rlsname size files datetime sfv nfo jpg addurl <<< "$details"
+  
+  # Prepare output with mIRC color codes
+  output="07[RELEASE] $rlsname"
   
   # Format size to remove decimals and unnecessary zeros
   if [ "$size" != "NULL" ]; then
     size_human_readable=$(printf "%.0f" "$size")
-  else
-    size_human_readable="Unknown"
+    output+=" :: 12SIZE: ${size_human_readable} MB"
   fi
   
   # Format files count to handle NULL
   if [ "$files" != "NULL" ]; then
-    files_count="$files"
-  else
-    files_count="Unknown"
-  fi
-
-  # Format genre to handle NULL
-  if [ "$genre" != "NULL" ]; then
-    formatted_genre="11GENRE: $genre"
-  else
-    formatted_genre=""
+    output+=" :: 12FILES: $files"
   fi
 
   # Calculate time since and format the output
   time_since=$(calculate_time_since "$datetime")
-  
-  # Prepare output with mIRC color codes
-  output="07[RELEASE] $rlsname -> 12SIZE: ${size_human_readable} MB :: 12FILES: $files_count"
-  output+="\n09PRED: $time_since ago"
-  
-  if [ -n "$formatted_genre" ]; then
-    output+="\n$formatted_genre"
+  if [ -n "$time_since" ]; then
+    output+="\n09PRED: $time_since ago"
   fi
   
-  # Check if rlsname is marked as NUKED or UNNUKED and get reason
-  nuke_status=$(execute_query "SELECT status, reason FROM $DB_TABLE_NUKE WHERE rlsname='$rlsname';")
-  if [ -n "$nuke_status" ]; then
-    read -r status reason <<< "$nuke_status"
-    if [ "$status" == "NUKE" ]; then
-      output+="\n04NUKED: $reason"
-    elif [ "$status" == "UNNUKE" ]; then
-      output+="\n09UNNUKED: $reason"
-    fi
-  fi
-  
-  if [ "$section" != "NULL" ]; then
-    output+="\n15SECTION: $section"
-  fi
-   
-  if [ "$addurl" != "NULL" ]; then
-    output+="\n10URL: $addurl"
-  fi
-  
-  output+="\n "
-  output+="\n07[www.PreDB.ws]"
-  
+  # Display SFV, NFO, JPG, URL if they are not NULL
   if [ "$sfv" != "NULL" ]; then
     output+="\n09SFV: $sfv"
   fi
@@ -151,6 +124,10 @@ if [ -n "$details" ]; then
   
   if [ "$jpg" != "NULL" ]; then
     output+="\n13JPG: $jpg"
+  fi
+  
+  if [ "$addurl" != "NULL" ]; then
+    output+="\n10URL: $addurl"
   fi
 
   echo -e "$output"
