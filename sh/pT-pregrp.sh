@@ -3,13 +3,13 @@
 # Database credentials
 db_host=""
 db_user=""
-db_pass=""
+db_password=""
 db_name=""  # Adjusted to your database name
 main_table="MAIN"
 nuke_table="NUKE"
 
 # Base MySQL command
-MYSQL_CMD="mysql -h $db_host -u $db_user -p$db_pass -D $db_name -s -N -e"
+MYSQL_CMD="mysql -h $db_host -u $db_user -p$db_password -D $db_name -s -N -e"
 
 # Function to execute MySQL queries
 execute_query() {
