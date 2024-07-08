@@ -1,4 +1,4 @@
-# dupestats.tcl
+# pT-predupe.tcl
 
 # Command handler for !dupe
 bind pub - !dupe dupeStats
