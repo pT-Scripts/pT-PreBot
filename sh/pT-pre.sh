@@ -118,8 +118,6 @@ if [ -n "$details" ]; then
   if [ -n "$addurl" ] && [ "$addurl" != "NULL" ]; then
     output+="\n10URL: $addurl"
   fi
-  output+="\n "
-  output+="\n07[www.PreDB.ws]"
   
   if [ -n "$sfv" ] && [ "$sfv" != "NULL" ]; then
     output+="\n09SFV: $sfv"
