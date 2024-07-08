@@ -4,7 +4,7 @@
 DB_HOST=""
 DB_USER=""
 DB_PASS=""
-DB_NAME=""
+DB_NAME=""  # Adjusted to your database name
 DB_TABLE_MAIN="MAIN"
 DB_TABLE_NUKE="NUKE"
 
@@ -14,14 +14,18 @@ MYSQL_CMD="mysql -h $DB_HOST -u $DB_USER -p$DB_PASS -D $DB_NAME -s -N -e"
 # Function to execute MySQL queries
 execute_query() {
   local query="$1"
-  $MYSQL_CMD "$query"
+  result=$($MYSQL_CMD "$query")
+  if [ $? -ne 0 ]; then
+    echo "MySQL query failed: $query"
+    exit 1
+  fi
+  echo "$result"
 }
 
 # Function to calculate time elapsed since a given datetime
 calculate_time_elapsed() {
   local datetime="$1"
   
-  # Check if datetime is '0000-00-00 00:00:00'
   if [ "$datetime" = "0000-00-00 00:00:00" ]; then
     echo "No time found"
     return
@@ -66,124 +70,107 @@ calculate_time_elapsed() {
   echo "$elapsed_time ago"
 }
 
-# Function to get total releases in MAIN table
-get_total_releases() {
-  local query="SELECT COUNT(*) FROM $DB_TABLE_MAIN WHERE \`group\`='$GROUP';"
-  execute_query "$query"
+# Function to fetch database statistics
+fetch_database_stats() {
+  local group_name="$1"
+
+  # Total releases in MAIN table
+  total_releases=$(execute_query "SELECT COUNT(*) FROM $DB_TABLE_MAIN WHERE \`group\`='$group_name';")
+  if [ "$total_releases" -eq 0 ]; then
+    echo "Group '$group_name' not found in database."
+    exit 1
+  fi
+
+  echo "14[GROUP INFO] ::09 $group_name  has a total of 09 $total_releases  releases"
+
+  # Last release in MAIN table
+  last_release=$(execute_query "SELECT rlsname, datetime FROM $DB_TABLE_MAIN WHERE \`group\`='$group_name' ORDER BY datetime DESC LIMIT 1;")
+  if [ -n "$last_release" ]; then
+    read -r last_rlsname last_datetime <<< "$last_release"
+    time_since_last_release=$(calculate_time_elapsed "$last_datetime")
+    echo "07Latest release: $last_rlsname - pred $time_since_last_release"
+  fi
+
+  # First release in MAIN table
+  first_release=$(execute_query "SELECT rlsname, datetime FROM $DB_TABLE_MAIN WHERE \`group\`='$group_name' ORDER BY datetime ASC LIMIT 1;")
+  if [ -n "$first_release" ]; then
+    read -r first_rlsname first_datetime <<< "$first_release"
+    time_since_first_release=$(calculate_time_elapsed "$first_datetime")
+    echo "07First release: $first_rlsname - pred $time_since_first_release"
+  fi
+
+  # Total size of releases in MAIN table (in original format)
+  total_size_str=$(execute_query "SELECT SUM(size) FROM $DB_TABLE_MAIN WHERE \`group\`='$group_name';")
+  echo "07Total size of releases: $total_size_str bytes"
+
+  # Number of nuked releases in NUKE table
+  nuked_releases=$(execute_query "SELECT COUNT(*) FROM $DB_TABLE_NUKE WHERE \`group\`='$group_name' AND status='NUKE';")
+  echo "NUKES: $nuked_releases"
+
+  # Last nuked release name and reason
+  last_nuked=$(execute_query "SELECT rlsname, reason FROM $DB_TABLE_NUKE WHERE \`group\`='$group_name' AND status='NUKE' ORDER BY datetime DESC LIMIT 1;")
+  if [ -n "$last_nuked" ]; then
+    read -r rlsname reason <<< "$last_nuked"
+    echo "Last NUKED release: $rlsname - Reason: $reason"
+  fi
 }
 
-# Function to get last release in MAIN table
-get_last_release() {
-  local query="SELECT rlsname, datetime FROM $DB_TABLE_MAIN WHERE \`group\`='$GROUP' ORDER BY datetime DESC LIMIT 1;"
-  execute_query "$query"
+# Function to fetch group statistics from API
+fetch_api_stats() {
+  local group_name="$1"
+  local api_url="https://api.predb.net/?type=groupstats&group=${group_name}"
+  local response=$(curl -s "$api_url")
+
+  # Check if API request was successful
+  local status=$(echo "$response" | jq -r '.status')
+  if [ "$status" != "success" ]; then
+    echo "Group '$group_name' not found in PreDB.net."
+    exit 1
+  fi
+
+  # Extract data from API response
+  local total=$(echo "$response" | jq -r '.data.total')
+  local first_pre=$(echo "$response" | jq -r '.data.first_pre[0].release')
+  local first_pre_date=$(echo "$response" | jq -r '.data.first_pre[0].pretime' | xargs -I{} date -d @{} '+%Y-%m-%d %H:%M:%S')
+  local last_pre=$(echo "$response" | jq -r '.data.last_pre[0].release')
+  local last_pre_date=$(echo "$response" | jq -r '.data.last_pre[0].pretime' | xargs -I{} date -d @{} '+%Y-%m-%d %H:%M:%S')
+
+  # Print the fetched data
+  echo "11[PreDB.Net] - Fetching from API"
+  echo "07Total Releases: ${total}"
+  echo "07First Release: ${first_pre} on ${first_pre_date}"
+  echo "07Latest Release: ${last_pre} on ${last_pre_date}"
 }
 
-# Function to get first release in MAIN table
-get_first_release() {
-  local query="SELECT rlsname, datetime FROM $DB_TABLE_MAIN WHERE \`group\`='$GROUP' ORDER BY datetime ASC LIMIT 1;"
-  execute_query "$query"
+# Function to create indexes if not exist
+create_indexes() {
+  execute_query "CREATE INDEX IF NOT EXISTS idx_group_main ON $DB_TABLE_MAIN (\`group\`);"
+  execute_query "CREATE INDEX IF NOT EXISTS idx_group_nuke ON $DB_TABLE_NUKE (\`group\`);"
 }
 
-# Function to get total size of releases in MAIN table
-get_total_size() {
-  local query="SELECT SUM(size) FROM $DB_TABLE_MAIN WHERE \`group\`='$GROUP';"
-  execute_query "$query"
-}
-
-# Function to get number of nuked releases in NUKE table (only counting 'NUKE' and ignoring 'MODNUKE')
-get_nuked_releases() {
-  local query="SELECT COUNT(*) FROM $DB_TABLE_NUKE WHERE \`group\`='$GROUP' AND nuke='NUKE';"
-  execute_query "$query"
-}
-
-# Function to get number of unnuked releases in NUKE table (counting 'UNNUKE' and ignoring 'MODNUKE')
-get_unnuked_releases() {
-  local query="SELECT COUNT(*) FROM $DB_TABLE_NUKE WHERE \`group\`='$GROUP' AND nuke='UNNUKE';"
-  execute_query "$query"
-}
-
-# Function to get last nuked release name and reason
-get_last_nuked() {
-  local query="SELECT rlsname, raison FROM $DB_TABLE_NUKE WHERE \`group\`='$GROUP' AND nuke='NUKE' ORDER BY datetime DESC LIMIT 1;"
-  execute_query "$query"
-}
-
-# Function to get last unnuked release name and reason
-get_last_unnuked() {
-  local query="SELECT rlsname, raison FROM $DB_TABLE_NUKE WHERE \`group\`='$GROUP' AND nuke='UNNUKE' ORDER BY datetime DESC LIMIT 1;"
-  execute_query "$query"
+# Function to display usage
+usage() {
+  echo "Usage: $0 [group name]"
+  exit 1
 }
 
 # Main script execution starts here
 
-# Check for the correct number of arguments
-if [ "$#" -ne 1 ]; then
-  echo "Usage: $0 <groupname>"
-  exit 1
+# Check if at least one argument is provided
+if [ "$#" -lt 1 ]; then
+  usage
 fi
 
 # Assign argument to variable
-GROUP="$1"
+group_name="$1"
 
-# Total releases in MAIN table
-total_releases=$(get_total_releases)
-echo "Group has a total of $total_releases releases"
+# Create indexes if not already existing
+create_indexes
 
-# Last release in MAIN table
-last_release=$(get_last_release)
-if [ -n "$last_release" ]; then
-  read -r last_rlsname last_datetime <<< "$last_release"
-  time_since_last_release=$(calculate_time_elapsed "$last_datetime")
-  echo "Last release: $last_rlsname - pred $time_since_last_release"
-else
-  echo "No releases found."
-fi
+# Fetch and display database data if group exists
+fetch_database_stats "$group_name"
 
-# First release in MAIN table
-first_release=$(get_first_release)
-if [ -n "$first_release" ]; then
-  read -r first_rlsname first_datetime <<< "$first_release"
-  time_since_first_release=$(calculate_time_elapsed "$first_datetime")
-  echo "First release: $first_rlsname - pred $time_since_first_release"
-else
-  echo "No releases found."
-fi
+# Fetch and display API data
+fetch_api_stats "$group_name"
 
-# Total size of releases in MAIN table (in original format)
-total_size_str=$(get_total_size)
-echo "Total size of releases: $total_size_str bytes"
-
-# Number of nuked releases in NUKE table
-nuked_releases=$(get_nuked_releases)
-echo "NUKES: $nuked_releases"
-
-# Number of unnuked releases in NUKE table
-unnuked_releases=$(get_unnuked_releases)
-echo "UNNUKES: $unnuked_releases"
-
-# Calculate percentage of nuked releases
-if [ "$total_releases" -gt 0 ]; then
-  percentage_nuked=$(echo "scale=2; ($nuked_releases / $total_releases) * 100" | bc)
-else
-  percentage_nuked="0.00"
-fi
-
-echo "Percentage of nuked releases: $percentage_nuked%"
-
-# Last nuked release name and reason
-last_nuked=$(get_last_nuked)
-if [ -n "$last_nuked" ]; then
-  read -r rlsname raison <<< "$last_nuked"
-  echo "Last NUKED release: $rlsname - Reason: $raison"
-else
-  echo "No nuked releases found."
-fi
-
-# Last unnuked release name and reason
-last_unnuked=$(get_last_unnuked)
-if [ -n "$last_unnuked" ]; then
-  read -r rlsname raison <<< "$last_unnuked"
-  echo "Last UNNUKED release: $rlsname - Reason: $raison"
-else
-  echo "No unnuked releases found."
-fi
+exit 0
