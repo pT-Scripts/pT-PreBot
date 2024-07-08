@@ -26,7 +26,7 @@ pT-PreBot is an IRC bot designed for managing pre-release data and integrating w
   How many releases missing datetime (Count/%)
   Database size in GB
   
-- **Module: PreDB.net API support** - Advanced search capabilities using PreDB.net API for precise release queries.
+- **Module: PreDB.net API support for PRE and GROUP info** - Advanced search capabilities using PreDB.net API for precise release queries.
 - **Real-time interaction and command execution via IRC channels.**
 - **User friendly color outputs for announces in IRC**
 - **Included .sql scheme for easy Database structure setup.**
