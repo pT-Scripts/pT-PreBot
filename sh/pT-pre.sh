@@ -1,18 +1,18 @@
 #!/bin/bash
 
 # Database credentials
-DB_HOST=""
-DB_USER=""
-DB_PASS=""
-DB_NAME=""
-DB_TABLE_MAIN="MAIN"
-DB_TABLE_XTRA="XTRA"
-DB_TABLE_NUKE="NUKE"
+db_host=""
+db_user=""
+db_pass=""
+db_name=""
+main_table="MAIN"
+xtra_table="XTRA"
+nuke_table="NUKE"
 
 # Function to execute MySQL queries
 execute_query() {
   local query="$1"
-  mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASS" -D "$DB_NAME" -s -N -e "$query" 2>/dev/null
+  mysql -h "$db_host" -u "$db_user" -p"$db_pass" -D "$db_name" -s -N -e "$query" 2>/dev/null
 }
 
 # Function to fetch release details including SFV, NFO, JPG, URL from MAIN and XTRA tables
@@ -26,8 +26,8 @@ fetch_release_details() {
                       COALESCE(x.nfo, 'NULL'), 
                       COALESCE(x.jpg, 'NULL'), 
                       COALESCE(x.addurl, 'NULL')
-               FROM $DB_TABLE_MAIN AS m
-               LEFT JOIN $DB_TABLE_XTRA AS x ON m.rlsname = x.rlsname
+               FROM $main_table AS m
+               LEFT JOIN $xtra_table AS x ON m.rlsname = x.rlsname
                WHERE m.rlsname='$rlsname';"
   execute_query "$query"
 }
