@@ -33,7 +33,7 @@ mysql -h "$db_host" -u "$db_user" -p"$db_password" "$db_name" -e "$nuke_query" >
 
 # Check if the query was successful
 if [ $? -eq 0 ]; then
-    echo "09[UNNUKE] ::09 $release :: 11REASON:09 $reason :: 11NUKENET:09 $nukenet"
+    echo "9[UNNUKE] 12->09 $release 12-> 11REASON:09 $reason 12-> 11NUKENET:04 $nukenet"
 else
     echo "Failed to insert into NUKE table."
     exit 1
