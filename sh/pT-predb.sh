@@ -1,14 +1,14 @@
 #!/bin/bash
 
 # Database credentials
-DB_HOST=""
-DB_USER=""
-DB_PASS=""
-DB_NAME=""
-DB_TABLE_MAIN="MAIN"
+db_host=""
+db_user=""
+db_pass=""
+db_name=""
+main_table="MAIN"
 
 # Base MySQL command with stderr redirected to /dev/null
-MYSQL_CMD="mysql -h $DB_HOST -u $DB_USER -p$DB_PASS -D $DB_NAME -s -N -e"
+MYSQL_CMD="mysql -h $db_host -u $db_user -p$db_pass -D $db_name -s -N -e"
 
 # Function to execute MySQL queries and suppress warnings
 execute_query() {
@@ -23,30 +23,30 @@ format_number() {
 
 # Function to create indexes if they do not exist
 create_indexes() {
-  execute_query "CREATE INDEX IF NOT EXISTS idx_datetime ON $DB_TABLE_MAIN (\`datetime\`);"
+  execute_query "CREATE INDEX IF NOT EXISTS idx_datetime ON $main_table (\`datetime\`);"
 }
 
 # Function to get total number of releases in MAIN table
 get_total_releases() {
-  local query="SELECT COUNT(*) FROM $DB_TABLE_MAIN;"
+  local query="SELECT COUNT(*) FROM $main_table;"
   execute_query "$query"
 }
 
 # Function to get the first release (rlsname and datetime) based on the earliest datetime after 1989 in MAIN table
 get_first_release() {
-  local query="SELECT \`rlsname\`, UNIX_TIMESTAMP(\`datetime\`) AS unix_datetime FROM $DB_TABLE_MAIN WHERE \`datetime\` >= '1989-01-01 00:00:00' ORDER BY \`datetime\` ASC LIMIT 1;"
+  local query="SELECT \`rlsname\`, UNIX_TIMESTAMP(\`datetime\`) AS unix_datetime FROM $main_table WHERE \`datetime\` >= '1989-01-01 00:00:00' ORDER BY \`datetime\` ASC LIMIT 1;"
   execute_query "$query"
 }
 
 # Function to get the latest release (rlsname and datetime) in MAIN table
 get_latest_release() {
-  local query="SELECT \`rlsname\`, UNIX_TIMESTAMP(\`datetime\`) AS unix_datetime FROM $DB_TABLE_MAIN WHERE \`datetime\` != '0000-00-00 00:00:00' ORDER BY \`datetime\` DESC LIMIT 1;"
+  local query="SELECT \`rlsname\`, UNIX_TIMESTAMP(\`datetime\`) AS unix_datetime FROM $main_table WHERE \`datetime\` != '0000-00-00 00:00:00' ORDER BY \`datetime\` DESC LIMIT 1;"
   execute_query "$query"
 }
 
 # Function to calculate database size in GB
 get_database_size_gb() {
-  local query="SELECT ROUND(SUM(data_length + index_length) / 1024 / 1024 / 1024, 2) AS size_gb FROM information_schema.tables WHERE table_schema = '$DB_NAME';"
+  local query="SELECT ROUND(SUM(data_length + index_length) / 1024 / 1024 / 1024, 2) AS size_gb FROM information_schema.tables WHERE table_schema = '$db_name';"
   execute_query "$query"
 }
 
