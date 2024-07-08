@@ -24,7 +24,7 @@ current_datetime=$(date '+%Y-%m-%d %H:%M:%S')  # Current datetime in the format 
 group=$(echo "$release" | awk -F '-' '{print $NF}')  # Get last field after the last hyphen
 
 # Construct the query for inserting into the NUKE table
-nuke_query="INSERT INTO $nuke_table (rlsname, \`group\`, datetime, nuke, reason, nukenet) 
+nuke_query="INSERT INTO $nuke_table (rlsname, \`group\`, datetime, status, reason, nukenet) 
             VALUES ('$release', '$group', '$current_datetime', 'NUKE', '$reason', '$nukenet');"
 
 # Execute MySQL query for inserting into NUKE table silently
