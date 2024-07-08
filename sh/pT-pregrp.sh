@@ -1,15 +1,15 @@
 #!/bin/bash
 
 # Database credentials
-DB_HOST=""
-DB_USER=""
-DB_PASS=""
-DB_NAME=""  # Adjusted to your database name
-DB_TABLE_MAIN="MAIN"
-DB_TABLE_NUKE="NUKE"
+db_host=""
+db_user=""
+db_pass=""
+db_name=""  # Adjusted to your database name
+main_table="MAIN"
+nuke_table="NUKE"
 
 # Base MySQL command
-MYSQL_CMD="mysql -h $DB_HOST -u $DB_USER -p$DB_PASS -D $DB_NAME -s -N -e"
+MYSQL_CMD="mysql -h $db_host -u $db_user -p$db_pass -D $db_name -s -N -e"
 
 # Function to execute MySQL queries
 execute_query() {
@@ -75,7 +75,7 @@ fetch_database_stats() {
   local group_name="$1"
 
   # Total releases in MAIN table
-  total_releases=$(execute_query "SELECT COUNT(*) FROM $DB_TABLE_MAIN WHERE \`group\`='$group_name';")
+  total_releases=$(execute_query "SELECT COUNT(*) FROM $main_table WHERE \`group\`='$group_name';")
   if [ "$total_releases" -eq 0 ]; then
     echo "Group '$group_name' not found in database."
     exit 1
@@ -84,7 +84,7 @@ fetch_database_stats() {
   echo "14[GROUP INFO] ::09 $group_name  has a total of 09 $total_releases  releases"
 
   # Last release in MAIN table
-  last_release=$(execute_query "SELECT rlsname, datetime FROM $DB_TABLE_MAIN WHERE \`group\`='$group_name' ORDER BY datetime DESC LIMIT 1;")
+  last_release=$(execute_query "SELECT rlsname, datetime FROM $main_table WHERE \`group\`='$group_name' ORDER BY datetime DESC LIMIT 1;")
   if [ -n "$last_release" ]; then
     read -r last_rlsname last_datetime <<< "$last_release"
     time_since_last_release=$(calculate_time_elapsed "$last_datetime")
@@ -92,7 +92,7 @@ fetch_database_stats() {
   fi
 
   # First release in MAIN table
-  first_release=$(execute_query "SELECT rlsname, datetime FROM $DB_TABLE_MAIN WHERE \`group\`='$group_name' ORDER BY datetime ASC LIMIT 1;")
+  first_release=$(execute_query "SELECT rlsname, datetime FROM $main_table WHERE \`group\`='$group_name' ORDER BY datetime ASC LIMIT 1;")
   if [ -n "$first_release" ]; then
     read -r first_rlsname first_datetime <<< "$first_release"
     time_since_first_release=$(calculate_time_elapsed "$first_datetime")
@@ -100,15 +100,15 @@ fetch_database_stats() {
   fi
 
   # Total size of releases in MAIN table (in original format)
-  total_size_str=$(execute_query "SELECT SUM(size) FROM $DB_TABLE_MAIN WHERE \`group\`='$group_name';")
+  total_size_str=$(execute_query "SELECT SUM(size) FROM $main_table WHERE \`group\`='$group_name';")
   echo "07Total size of releases: $total_size_str bytes"
 
   # Number of nuked releases in NUKE table
-  nuked_releases=$(execute_query "SELECT COUNT(*) FROM $DB_TABLE_NUKE WHERE \`group\`='$group_name' AND status='NUKE';")
+  nuked_releases=$(execute_query "SELECT COUNT(*) FROM $nuke_table WHERE \`group\`='$group_name' AND status='NUKE';")
   echo "NUKES: $nuked_releases"
 
   # Last nuked release name and reason
-  last_nuked=$(execute_query "SELECT rlsname, reason FROM $DB_TABLE_NUKE WHERE \`group\`='$group_name' AND status='NUKE' ORDER BY datetime DESC LIMIT 1;")
+  last_nuked=$(execute_query "SELECT rlsname, reason FROM $nuke_table WHERE \`group\`='$group_name' AND status='NUKE' ORDER BY datetime DESC LIMIT 1;")
   if [ -n "$last_nuked" ]; then
     read -r rlsname reason <<< "$last_nuked"
     echo "Last NUKED release: $rlsname - Reason: $reason"
@@ -144,8 +144,8 @@ fetch_api_stats() {
 
 # Function to create indexes if not exist
 create_indexes() {
-  execute_query "CREATE INDEX IF NOT EXISTS idx_group_main ON $DB_TABLE_MAIN (\`group\`);"
-  execute_query "CREATE INDEX IF NOT EXISTS idx_group_nuke ON $DB_TABLE_NUKE (\`group\`);"
+  execute_query "CREATE INDEX IF NOT EXISTS idx_group_main ON $main_table (\`group\`);"
+  execute_query "CREATE INDEX IF NOT EXISTS idx_group_nuke ON $nuke_table (\`group\`);"
 }
 
 # Function to display usage
