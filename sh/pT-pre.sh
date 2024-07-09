@@ -3,7 +3,7 @@
 # Database credentials
 db_host=""
 db_user=""
-db_password=""
+db_pass=""
 db_name=""
 main_table="MAIN"
 xtra_table="XTRA"
@@ -12,7 +12,7 @@ nuke_table="NUKE"
 # Function to execute MySQL queries
 execute_query() {
   local query="$1"
-  mysql -h "$db_host" -u "$db_user" -p"$db_password" -D "$db_name" -s -N -e "$query" 2>/dev/null
+  mysql -h "$db_host" -u "$db_user" -p"$db_pass" -D "$db_name" -s -N -e "$query" 2>/dev/null
 }
 
 # Function to fetch release details including SFV, NFO, JPG, URL from MAIN and XTRA tables
@@ -29,6 +29,13 @@ fetch_release_details() {
                FROM $main_table AS m
                LEFT JOIN $xtra_table AS x ON m.rlsname = x.rlsname
                WHERE m.rlsname='$rlsname';"
+  execute_query "$query"
+}
+
+# Function to check if the release is nuked and get the reason
+check_nuke_status() {
+  local rlsname="$1"
+  local query="SELECT reason FROM $nuke_table WHERE rlsname='$rlsname';"
   execute_query "$query"
 }
 
@@ -95,6 +102,12 @@ if [ -n "$details" ]; then
   
   # Prepare output with mIRC color codes
   output="07[RELEASE] $rlsname"
+  
+  # Check if the release is nuked
+  nuke_reason=$(check_nuke_status "$rlsname")
+  if [ -n "$nuke_reason" ]; then
+    output+=" :: 04[NUKED] $nuke_reason"
+  fi
   
   # Format size to remove decimals and unnecessary zeros
   if [ "$size" != "NULL" ]; then
