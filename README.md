@@ -55,7 +55,7 @@ Ensure you have the following set up before installing pT-PreBot:
    
 5. Change all Mysql info in .sh files located in sh folder to your own db info
 
-For PRE INFO URL announce change #somechan in pT-addpre.tcl - pT-addinfo.tcl - pTaddurl.tcl
+For PRE INFO URL announce change #somechan in tcl files
 
 7. Put .tcl in eggdrop.conf and Rehash your eggdrop bot.
 
