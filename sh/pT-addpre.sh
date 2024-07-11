@@ -43,6 +43,6 @@ query="INSERT INTO $main_table (rlsname, section, datetime, lastupdated, status,
 execute_query "$query"
 
 # Echo the output in the required format
-echo "11[PRE] iN 07$section04 -> $release"
+echo "11PRE :: 07$section :: $release"
 
 exit 0
