@@ -29,5 +29,5 @@ if [ "$exists" -eq 0 ]; then
     mysql -h "$db_host" -u "$db_user" -p"$db_password" "$db_name" -e "$query" > /dev/null 2>&1
 
     # Echo the INFO line
-    echo "12[URL] 04-> $release 04-> $url"
+    echo "12URL  ::  $release  ::  $url"
 fi
