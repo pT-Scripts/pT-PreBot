@@ -49,7 +49,7 @@ if [ "$status" != "" ]; then
     execute_query "$query"
 
     # Echo the INFO line for update
-    echo "11[INFO]04 -> $release 04-> 11FiLES: $files 04-> 11SiZE: $size 11MiB"
+    echo "11INFO ::  $release  :: 11FiLES: $files  :: 11SiZE: $size 11MB"
 fi
 
 exit 0
