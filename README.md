@@ -105,3 +105,7 @@ Simulate the !db command:
 Simulate the !group command:
 ./pT-group.sh SURCODE
 
+
+-
+
+If you need any help we are on linknet - #pt-scripts
